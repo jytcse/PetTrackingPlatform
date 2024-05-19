@@ -3,4 +3,9 @@
     <string name="title_home">地圖</string>
     <string name="title_dashboard">資料設定</string>
     <string name="title_notifications">notifications</string>
+    <string name="username_hint">帳號</string>
+    <string name="password_hint">密碼</string>
+    <string name="login_btn">登入</string>
+    <string name="pet_tracking_platform">寵物追蹤平台</string>
+    <string name="thumb">thumb</string>
 </resources>
