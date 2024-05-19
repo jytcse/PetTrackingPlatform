@@ -1,4 +1,5 @@
 package com.example.pettrackingplatform.ui.home;
+
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-
+import java.util.Stack;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
@@ -39,11 +39,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private MapView mMapView;
     private List<Marker> markerList = new ArrayList<>();
     private Polygon polygon;
-    //建立View時，先檢查API_KEY是否存在，沒有的話提示使用者，不然google map 跑不出來
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
         // 檢查 API 金鑰是否存在
         if (!checkApiKey()) {
             // 顯示提示給使用者
@@ -55,10 +56,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mMapView.getMapAsync(this);
         }
 
-
         return rootView;
     }
-    // 檢查 API 金鑰是否存在
+
     private boolean checkApiKey() {
         try {
             ApplicationInfo appInfo = getActivity().getPackageManager().getApplicationInfo(
@@ -74,7 +74,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return false;
     }
 
-    // 當地圖準備好
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -91,8 +90,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
                 // 將標記加入清單
                 markerList.add(marker);
-                // 清除所有的多邊形
-                // 如果標記數量為3，則創建多邊形
+                // 如果標記數量>=3，則創建多邊形
                 if (markerList.size() >= 3) {
                     drawPolygon();
                 }
@@ -107,23 +105,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 marker.remove();
                 // 從清單中刪除標記
                 markerList.remove(marker);
-
                 // 清除所有的多邊形
                 clearPolygon();
-
-
-                // 如果標記數量>3，則重新繪製多邊形
+                // 如果標記數量>=3，則重新繪製多邊形
                 if (markerList.size() >= 3) {
                     drawPolygon();
                 }
                 return true;
             }
         });
-
-        // 設置地圖樣式
-//        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
-
     }
+
     // 清除所有的多邊形
     private void clearPolygon() {
         if (polygon != null) {
@@ -137,31 +129,79 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         // 清除上次的多邊形
         clearPolygon();
 
-        // 創建多邊形
-        PolygonOptions polygonOptions = new PolygonOptions();
-        // 對標記點按照經度進行排序
-        markerList.sort(new Comparator<Marker>() {
-            @Override
-            public int compare(Marker marker1, Marker marker2) {
-                return Double.compare(marker1.getPosition().longitude, marker2.getPosition().longitude);
-            }
-        });
-        // 將排序後的標記點添加到多邊形
+        // 將標記點轉換為LatLng點的清單
+        List<LatLng> points = new ArrayList<>();
         for (Marker marker : markerList) {
-            polygonOptions.add(marker.getPosition());
+            points.add(marker.getPosition());
         }
-        // 添加第一個標記點，以封閉多邊形
-        polygonOptions.add(markerList.get(0).getPosition());
+        // 計算凸包點
+        List<LatLng> convexHull = getConvexHull(points);
 
-        // 設置多邊形的填充顏色
-        polygonOptions.fillColor(Color.argb(100, 0, 255, 0)); // 綠色，透明度為100
-
+        // 用凸包點創建多邊形
+        PolygonOptions polygonOptions = new PolygonOptions();
+        for (LatLng point : convexHull) {
+            polygonOptions.add(point);
+        }
+        // 區域填充顏色
+        polygonOptions.fillColor(Color.argb(100, 0, 255, 0));
         polygon = mMap.addPolygon(polygonOptions);
     }
-    // 取得標記清單
-    public List<Marker> getMarkerList() {
-        return markerList;
+
+    // 使用 Graham Scan 算法計算凸包
+    private List<LatLng> getConvexHull(List<LatLng> points) {
+        // 如果點的數量少於3，直接返回這些點（無法構成多邊形）
+        if (points.size() < 3) return points;
+
+        // 找到最底下且最左邊的點，作為算法的起點（pivot）
+        LatLng pivot = points.get(0);
+        for (LatLng point : points) {
+            if (point.latitude < pivot.latitude || (point.latitude == pivot.latitude && point.longitude < pivot.longitude)) {
+                pivot = point;
+            }
+        }
+
+        final LatLng finalPivot = pivot;
+
+        // 按照與 pivot 的極角（polar angle）對所有點進行排序
+        points.sort(new Comparator<LatLng>() {
+            @Override
+            public int compare(LatLng a, LatLng b) {
+                double angleA = Math.atan2(a.latitude - finalPivot.latitude, a.longitude - finalPivot.longitude);
+                double angleB = Math.atan2(b.latitude - finalPivot.latitude, b.longitude - finalPivot.longitude);
+                return Double.compare(angleA, angleB);
+            }
+        });
+
+        // 使用Stack來存儲凸包的點
+        Stack<LatLng> hull = new Stack<>();
+        // 將排序後的前兩個點推入堆疊中
+        hull.push(points.get(0));
+        hull.push(points.get(1));
+
+        // 處理剩餘的點
+        for (int i = 2; i < points.size(); i++) {
+            LatLng top = hull.pop(); // 彈出堆疊頂部的元素
+            // 如果新的點和堆疊頂部的前一個點與 top 構成的轉折不是逆時針方向（不構成凸包的一部分），則繼續彈出堆疊頂部的元素
+            while (!isCounterClockwise(hull.peek(), top, points.get(i))) {
+                top = hull.pop();
+            }
+            // 將合法的 top 重新推入堆疊中
+            hull.push(top);
+            // 將新的點推入堆疊中
+            hull.push(points.get(i));
+        }
+
+        // 返回存儲凸包點的堆疊轉換為的列表
+        return new ArrayList<>(hull);
     }
+
+    // 檢查三個點是否形成逆時針方向
+    // 如果從 a 到 b 到 c 的轉折是逆時針方向，返回 true
+    private boolean isCounterClockwise(LatLng a, LatLng b, LatLng c) {
+        return (b.longitude - a.longitude) * (c.latitude - a.latitude) > (b.latitude - a.latitude) * (c.longitude - a.longitude);
+    }
+
+
 
     @Override
     public void onResume() {
