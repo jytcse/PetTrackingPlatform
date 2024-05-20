@@ -1,7 +1,9 @@
 package com.example.pettrackingplatform;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.example.pettrackingplatform.ui.login.Login;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        int userId = SharedPreferencesUtil.getUserId(this);
+        Toast.makeText(this, "ID:" +userId, Toast.LENGTH_SHORT).show();
+
     }
 
 }

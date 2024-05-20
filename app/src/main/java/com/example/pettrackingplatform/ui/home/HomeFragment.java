@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+
                 // 新增標記
                 Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
                 // 將標記加入清單
