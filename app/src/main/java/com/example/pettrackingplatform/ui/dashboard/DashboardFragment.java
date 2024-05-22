@@ -1,23 +1,24 @@
 package com.example.pettrackingplatform.ui.dashboard;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pettrackingplatform.R;
 import com.example.pettrackingplatform.SharedPreferencesUtil;
 import com.example.pettrackingplatform.databinding.FragmentDashboardBinding;
+import com.example.pettrackingplatform.ui.pet.newPet;
 
 import java.util.List;
 
@@ -48,6 +49,17 @@ public class DashboardFragment extends Fragment implements PetAdapter.OnItemClic
 
         // 從後端服務中獲取寵物數據並更新 RecyclerView
         fetchPetData();
+
+        Button createButton = root.findViewById(R.id.newPet);
+        createButton.setOnClickListener(v -> {
+
+
+                Intent intent = new Intent(getActivity(), newPet.class);
+                startActivity(intent);
+
+
+        });
+
 
         return root;
     }

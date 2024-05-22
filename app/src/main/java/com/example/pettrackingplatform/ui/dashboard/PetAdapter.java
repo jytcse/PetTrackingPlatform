@@ -1,11 +1,13 @@
 package com.example.pettrackingplatform.ui.dashboard;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pettrackingplatform.R;
@@ -63,6 +65,12 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
         holder.petNameTextView.setText(pet.getName());
         holder.petBirthTextView.setText(pet.getBirthday());
 
+        // 根據寵物性別設置文字顏色
+        if ("male".equals(pet.getGender())) {
+            holder.petNameTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.blue)); // 藍色
+        } else if ("female".equals(pet.getGender())) {
+            holder.petNameTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.pink)); // 粉色
+        }
         // 添加點擊事件
         holder.itemView.setOnClickListener(view -> {
             // 在點擊事件中執行相應的操作
