@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-05-19 15:12:57
+-- 產生時間： 2024-06-02 11:03:20
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -30,7 +30,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `health_record` (
   `ID` int(11) NOT NULL,
   `type` varchar(255) NOT NULL COMMENT '醫療類型',
-  `description` text DEFAULT NULL COMMENT '描述',
   `cost` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 COMMENT '花費'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -38,12 +37,13 @@ CREATE TABLE `health_record` (
 -- 傾印資料表的資料 `health_record`
 --
 
-INSERT INTO `health_record` (`ID`, `type`, `description`, `cost`) VALUES
-(1, 'Vaccination', 'Rabies vaccination', 500),
-(2, 'Parasite Control', 'Flea and tick control', 300),
-(3, 'Dental Care', 'Teeth cleaning and checkup', 400),
-(4, 'Medical Checkup', 'General health checkup', 200),
-(5, 'Surgery', 'Spay/neuter surgery', 1000);
+INSERT INTO `health_record` (`ID`, `type`, `cost`) VALUES
+(1, 'Vaccination', 500),
+(2, 'Parasite Control', 300),
+(3, 'Dental Care', 400),
+(4, 'Medical Checkup', 200),
+(5, 'Surgery', 1000),
+(8, 'test', 123);
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,14 @@ INSERT INTO `pet` (`ID`, `name`, `gender`, `birthday`) VALUES
 (2, 'Luna', 'female', '2019-06-15'),
 (3, 'Charlie', 'male', '2015-03-01'),
 (4, 'Daisy', 'female', '2017-09-01'),
-(5, 'Rocky', 'male', '2020-02-01');
+(5, 'Rocky', 'male', '2020-02-01'),
+(6, 'MyPettt', 'male', '2024-05-22'),
+(7, 'test1', 'female', '2024-05-22'),
+(8, 'netPet', 'female', '2024-05-22'),
+(9, 'www', 'male', '2024-05-22'),
+(10, 'testc', 'male', '2024-05-22'),
+(11, 'www', 'female', '2024-06-02'),
+(12, 'wwwe', 'male', '2024-06-02');
 
 -- --------------------------------------------------------
 
@@ -132,7 +139,8 @@ CREATE TABLE `pet_record` (
 
 INSERT INTO `pet_record` (`ID`, `pet_id`, `record_id`) VALUES
 (1, 1, 1),
-(2, 1, 2);
+(2, 1, 2),
+(3, 2, 8);
 
 -- --------------------------------------------------------
 
@@ -170,7 +178,15 @@ CREATE TABLE `user_pet` (
 --
 
 INSERT INTO `user_pet` (`ID`, `user_id`, `pet_id`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 6),
+(4, 1, 7),
+(5, 1, 8),
+(6, 1, 9),
+(7, 1, 10),
+(8, 1, 11),
+(9, 1, 12);
 
 --
 -- 已傾印資料表的索引
@@ -232,7 +248,7 @@ ALTER TABLE `user_pet`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `health_record`
 --
 ALTER TABLE `health_record`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `location`
@@ -244,7 +260,7 @@ ALTER TABLE `location`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `pet`
 --
 ALTER TABLE `pet`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `pet_location`
@@ -256,7 +272,7 @@ ALTER TABLE `pet_location`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `pet_record`
 --
 ALTER TABLE `pet_record`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user`
@@ -268,7 +284,7 @@ ALTER TABLE `user`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user_pet`
 --
 ALTER TABLE `user_pet`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- 已傾印資料表的限制式

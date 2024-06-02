@@ -1,8 +1,10 @@
 package com.example.pettrackingplatform.ui.record;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pettrackingplatform.R;
+import com.example.pettrackingplatform.ui.pet.NewPet;
 
 import java.util.List;
 
@@ -23,28 +26,37 @@ public class RecordList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_list);
 
-        // 初始化 RecyclerView
+        // Initialize RecyclerView
         RecyclerView recyclerView = findViewById(R.id.record_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recordAdapter = new RecordAdapter();
         recyclerView.setAdapter(recordAdapter);
 
-        // 从 Intent 中获取 petID
+        // Get petID from Intent
         petId = getIntent().getIntExtra("petID", -1);
-        //Toast.makeText("",Toast.LENGTH_LONG);
 
-        // 检查 petID 是否有效
+        // Check if petID is valid
         if (petId == -1) {
-            // 在这里处理无效的 petID，例如显示错误消息或跳转回前一页
+            // Handle invalid petID, e.g., show error message or navigate back
+            Toast.makeText(this, "Invalid Pet ID", Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
 
-        // 根据 petID 获取记录数据
+        // Fetch record data based on petID
         fetchRecordData();
+
+        // Set up button to navigate to NewRecordActivity
+        Button createButton = findViewById(R.id.newRecordBtn);
+        createButton.setOnClickListener(v -> {
+            Intent intent = new Intent(RecordList.this, newRecordActivity.class);
+            intent.putExtra("petID",petId);
+            startActivity(intent);
+        });
     }
 
     private void fetchRecordData() {
-        // 使用 AsyncTask 异步获取数据
+        // Use AsyncTask to fetch data asynchronously
         new FetchRecordDataTask(petId, recordAdapter).execute();
     }
 
@@ -59,14 +71,14 @@ public class RecordList extends AppCompatActivity {
 
         @Override
         protected List<Record> doInBackground(Void... voids) {
-            // 从 RecordRepository 获取记录数据
+            // Fetch record data from RecordRepository
             return RecordRepository.getRecordsForPet(petId);
         }
 
         @Override
         protected void onPostExecute(List<Record> records) {
             if (records != null) {
-                // 更新适配器的数据
+                // Update adapter with fetched data
                 recordAdapter.setRecords(records);
             }
         }

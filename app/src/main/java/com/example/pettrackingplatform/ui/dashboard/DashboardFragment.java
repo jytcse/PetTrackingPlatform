@@ -31,15 +31,9 @@ public class DashboardFragment extends Fragment implements PetAdapter.OnItemClic
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        dashboardViewModel =
-//                new ViewModelProvider(this).get(DashboardViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
        View root = binding.getRoot();
-
-//        final TextView textView = binding.textDashboard;
-//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
         // 初始化 RecyclerView
         RecyclerView recyclerView = root.findViewById(R.id.petList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -54,10 +48,8 @@ public class DashboardFragment extends Fragment implements PetAdapter.OnItemClic
         Button createButton = root.findViewById(R.id.newPet);
         createButton.setOnClickListener(v -> {
 
-
                 Intent intent = new Intent(getActivity(), NewPet.class);
                 startActivity(intent);
-
 
         });
 

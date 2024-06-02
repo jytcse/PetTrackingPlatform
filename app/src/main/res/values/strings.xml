@@ -22,4 +22,6 @@
     <string name="female">母</string>
     <string name="record">醫療紀錄</string>
     <string name="newRecord">新增紀錄</string>
+    <string name="newRecordTitle">新增醫療紀錄</string>
+    <string name="cost">花費金額</string>
 </resources>
