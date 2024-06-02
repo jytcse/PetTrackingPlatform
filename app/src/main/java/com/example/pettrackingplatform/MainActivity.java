@@ -3,7 +3,6 @@ package com.example.pettrackingplatform;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.example.pettrackingplatform.ui.login.Login;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

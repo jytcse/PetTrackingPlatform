@@ -3,6 +3,8 @@ package com.example.pettrackingplatform.ui.pet;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -10,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class newPet extends AppCompatActivity {
+public class NewPet extends AppCompatActivity {
     // 宣告 UI 元件
     private EditText petNameText;
     private CalendarView calendarView;
@@ -36,7 +39,7 @@ public class newPet extends AppCompatActivity {
     private Button submitBtn;
     private Button cancelBtn;
     private String selectedDate = "";
-
+    private GestureDetector gestureDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +77,27 @@ public class newPet extends AppCompatActivity {
         submitBtn.setOnClickListener(v -> {
             new AddPetTask().execute();
         });
-    }
 
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+                // 偵測到向左滑動
+                if (e1.getX() - e2.getX() > 50 && Math.abs(velocityX) > 100) {
+                    // 執行返回上一頁的操作
+                    onBackPressed();
+                    return true;
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
+
+
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // 將觸摸事件傳遞給 gestureDetector
+        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
+    }
     // 用於在背景執行資料庫操作的 AsyncTask
     private class AddPetTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -94,7 +116,7 @@ public class newPet extends AppCompatActivity {
             }
 
             // 從 SharedPreferences 獲取使用者 ID
-            int userId = SharedPreferencesUtil.getUserId(newPet.this);
+            int userId = SharedPreferencesUtil.getUserId(NewPet.this);
 
             // 從 UI 元件獲取寵物資料
             String name = petNameText.getText().toString();
@@ -144,16 +166,16 @@ public class newPet extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             // 根據資料庫操作結果顯示訊息
             if (result) {
-                Toast.makeText(newPet.this, "新增成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPet.this, "新增成功", Toast.LENGTH_SHORT).show();
 
                 // 導航到主畫面
-                Intent intent = new Intent(newPet.this, MainActivity.class);
+                Intent intent = new Intent(NewPet.this, MainActivity.class);
                 startActivity(intent);
 
                 // 關閉當前 Activity
                 finish();
             } else {
-                Toast.makeText(newPet.this, "新增失敗", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPet.this, "新增失敗", Toast.LENGTH_SHORT).show();
             }
         }
     }

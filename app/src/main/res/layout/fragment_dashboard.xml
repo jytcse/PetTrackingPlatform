@@ -55,23 +55,20 @@
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
-        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline9"
-        app:layout_constraintVertical_bias="0.727" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/newPet"
         android:layout_width="134dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/create_pet"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintEnd_toStartOf="@+id/guideline6"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toTopOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/petList"

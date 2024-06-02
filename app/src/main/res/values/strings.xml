@@ -20,4 +20,6 @@
     <string name="gender">性別\n</string>
     <string name="male">公</string>
     <string name="female">母</string>
+    <string name="record">醫療紀錄</string>
+    <string name="newRecord">新增紀錄</string>
 </resources>

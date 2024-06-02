@@ -28,4 +28,8 @@ public class SharedPreferencesUtil {
         SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return preferences.getString("UserName", null); // 如果没有找到用户ID则返回-1
     }
+
+
+
+
 }

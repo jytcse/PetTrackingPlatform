@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pettrackingplatform.R;
 import com.example.pettrackingplatform.SharedPreferencesUtil;
 import com.example.pettrackingplatform.databinding.FragmentDashboardBinding;
-import com.example.pettrackingplatform.ui.pet.newPet;
+import com.example.pettrackingplatform.ui.pet.NewPet;
+import com.example.pettrackingplatform.ui.record.RecordList;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class DashboardFragment extends Fragment implements PetAdapter.OnItemClic
         createButton.setOnClickListener(v -> {
 
 
-                Intent intent = new Intent(getActivity(), newPet.class);
+                Intent intent = new Intent(getActivity(), NewPet.class);
                 startActivity(intent);
 
 
@@ -79,7 +80,12 @@ public class DashboardFragment extends Fragment implements PetAdapter.OnItemClic
 
     @Override
     public void onPetClick(Pet pet) {
-        Log.d("sdsadadadadadas", "onPetClick: "+pet);
+
+        Intent intent = new Intent(getActivity(), RecordList.class);
+       intent.putExtra("petID",pet.getId());
+
+        startActivity(intent);
+
     }
 
     private class FetchPetDataTask extends AsyncTask<Void, Void, List<Pet>> {
