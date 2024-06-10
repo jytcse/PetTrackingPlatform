@@ -16,10 +16,10 @@
         android:name="com.example.pettrackingplatform.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <activity
+        android:id="@+id/login2"
+        android:name="com.example.pettrackingplatform.ui.login.Login"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
 
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.pettrackingplatform.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
 </navigation>
