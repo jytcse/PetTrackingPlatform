@@ -72,7 +72,7 @@ public class Login extends AppCompatActivity {
             }
 
             // 下SQL 對比帳號與密碼並取得user ID
-            String query = "SELECT id FROM user WHERE username='" + usernameEditText.getText().toString() + "' AND password='" + passwordEditText.getText().toString() + "'";
+            String query = "SELECT * FROM user WHERE username='" + usernameEditText.getText().toString() + "' AND password='" + passwordEditText.getText().toString() + "'";
 
             // 執行SQL語句
             ResultSet resultSet = null;
